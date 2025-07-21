@@ -30,38 +30,11 @@
             <div class="container">
                 <h2 class="section-title">Blog de Noticias</h2>
                 <p class="section-subtitle">Mantente al día con nuestras últimas actividades, logros e historias de impacto.</p>
-                <div class="card-grid">
-                     <article class="card">
-                        <img src="https://images.unsplash.com/photo-1516937942-0156de448342?q=80&w=2070&auto=format&fit=crop" alt="Jornada Ambiental">
-                        <div class="card-content">
-                            <h3>Exitosa jornada de limpieza de costas</h3>
-                            <p class="card-meta">Publicado el 20 de julio, 2025</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1599050870356-5d6c5a683a99?q=80&w=2070&auto=format&fit=crop" alt="Campaña Juguetes">
-                        <div class="card-content">
-                            <h3>Campaña del Día del Niño: ¡Gracias a todos!</h3>
-                            <p class="card-meta">Publicado el 15 de julio, 2025</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1556761175-b413da4b248q?q=80&w=1974&auto=format&fit=crop" alt="Nuevos Socios">
-                        <div class="card-content">
-                            <h3>Damos la bienvenida a nuevos socios</h3>
-                            <p class="card-meta">Publicado el 10 de julio, 2025</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
+                
+                <div id="news-container" class="card-grid">
+                    <p>Cargando noticias...</p>
                 </div>
-                <div class="filter-buttons" style="margin-top: 60px;">
-                    <button class="filter-btn">Anterior</button>
-                    <button class="filter-btn active">1</button>
-                    <button class="filter-btn">2</button>
-                    <button class="filter-btn">Siguiente</button>
-                </div>
+
             </div>
         </section>
     </main>
@@ -71,6 +44,8 @@
             <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
         </div>
     </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="scripts.js" defer></script>
 </body>
 </html>
