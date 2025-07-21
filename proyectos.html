@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - Rotaract Club Bahía Blanca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Rotaract<span>.</span></a>
+            <div class="main-nav">
+                <nav>
+                    <a href="index.html">INICIO</a>
+                    <a href="quienes-somos.html">QUIÉNES SOMOS</a>
+                    <a href="proyectos.html" class="active">PROYECTOS</a>
+                    <a href="noticias.html">NOTICIAS</a>
+                    <a href="contacto.html">CONTACTO</a>
+                </nav>
+                <a href="sumate.html" class="button button-primary">SUMATE</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="section fade-in-section">
+            <div class="container">
+                <h2 class="section-title">Nuestros Proyectos</h2>
+                <p class="section-subtitle">Acciones que transforman. Conoce las iniciativas que hemos llevado a cabo para mejorar nuestra comunidad.</p>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="comunidad">Comunidad</button>
+                    <button class="filter-btn" data-filter="ambiente">Medio Ambiente</button>
+                    <button class="filter-btn" data-filter="salud">Salud</button>
+                </div>
+                <div class="card-grid">
+                    <article class="card" data-category="ambiente">
+                        <img src="https://images.unsplash.com/photo-1611270418597-a6c7365b6b35?q=80&w=2070&auto=format&fit=crop" alt="Proyecto de Reforestación">
+                        <div class="card-content">
+                            <h3>Reforestación del Parque</h3>
+                            <p class="card-meta">Categoría: Medio Ambiente</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="comunidad">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop" alt="Colecta de Alimentos">
+                        <div class="card-content">
+                            <h3>Colecta Anual de Alimentos</h3>
+                            <p class="card-meta">Categoría: Comunidad</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="salud">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" alt="Jornada de Salud">
+                        <div class="card-content">
+                            <h3>Jornada de Prevención y Salud</h3>
+                            <p class="card-meta">Categoría: Salud</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Rotaract<span>.</span></div>
+            <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="scripts.js" defer></script>
+</body>
+</html>
