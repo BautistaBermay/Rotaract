@@ -1,0 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main # o master, dependiendo de tu rama principal
+
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    folder: "_posts/noticias"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime" }
+      - { label: "Imagen", name: "image", widget: "image" }
+      - { label: "Resumen", name: "summary", widget: "text" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
