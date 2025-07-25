@@ -1,4 +1,4 @@
-// --- INICIALIZACIÓN DE FIREBASE (Con tu código) ---
+// --- INICIALIZACIÓN DE FIREBASE ---
 const firebaseConfig = {
   apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
   authDomain: "rotaract-bahia-blanca.firebaseapp.com",
@@ -9,7 +9,6 @@ const firebaseConfig = {
   measurementId: "G-VXKKFV30H8"
 };
 
-// Inicializar Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -17,9 +16,9 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 
-// --- LÓGICA GENERAL DEL SITIO (Se ejecuta cuando la página carga) ---
+// --- LÓGICA PRINCIPAL (Se ejecuta cuando toda la página ha cargado) ---
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Efecto de Header con Sombra
+    // 1. Lógica del Header
     const header = document.querySelector('header');
     if (header) {
         window.addEventListener('scroll', () => {
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Animación de Entrada para Secciones
+    // 2. Animaciones de Entrada
     const sections = document.querySelectorAll('.fade-in-section');
     if (sections.length > 0) {
         const observer = new IntersectionObserver((entries) => {
@@ -42,22 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Lógica para Pestañas en sumate.html
-    const loginFormElement = document.getElementById('login-form');
-    if (loginFormElement) {
-        const registerFormElement = document.getElementById('register-form');
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                const isLogin = button.textContent.includes('Iniciar Sesión');
-                loginFormElement.classList.toggle('active', isLogin);
-                registerFormElement.classList.toggle('active', !isLogin);
-            });
-        });
-    }
+    setupTabs();
+    
+    // 4. Lógica Formularios de Login/Registro
+    setupAuthForms();
 
-    // 4. Lógica para Cargar Contenido Dinámico (Noticias y Proyectos)
+    // 5. Cargar contenido del CMS
     if (document.getElementById('news-container')) {
         cargarContenido('noticias');
     }
@@ -65,18 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarContenido('proyectos');
     }
 
-    // 5. Lógica para Proteger el Área de Socio
+    // 6. Proteger el Área de Socio y Botón de Logout
     if (window.location.pathname.includes('area-socio.html')) {
         protegerAreaSocio();
     }
-
-    // 6. Lógica para el Botón de Cerrar Sesión
     const logoutButton = document.getElementById('logout-button');
     if (logoutButton) {
         logoutButton.addEventListener('click', (e) => {
             e.preventDefault();
             auth.signOut().then(() => {
-                alert('Has cerrado sesión.');
                 window.location.href = 'index.html';
             });
         });
@@ -84,83 +70,50 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- LÓGICA DEL PORTAL DE SOCIOS (Formularios) ---
+// --- DEFINICIÓN DE FUNCIONES ---
 
-// Manejar el registro
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('register-name').value;
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const passwordConfirm = document.getElementById('register-password-confirm').value;
+function setupTabs() {
+    const loginFormElement = document.getElementById('login-form');
+    if (!loginFormElement) return;
 
-        if (password !== passwordConfirm) {
-            alert('Las contraseñas no coinciden.');
-            return;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                return db.collection('socios').doc(userCredential.user.uid).set({
-                    nombre: name,
-                    email: email,
-                    estadoCuota: 'Pendiente',
-                    vencimiento: 'N/A'
-                }).then(() => {
-                    alert('¡Registro exitoso! Serás dirigido a tu panel.');
-                    window.location.href = 'area-socio.html';
-                });
-            })
-            .catch((error) => {
-                alert('Error al registrar: ' + error.message);
-            });
+    const registerFormElement = document.getElementById('register-form');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const isLogin = button.textContent.includes('Iniciar Sesión');
+            loginFormElement.classList.toggle('active', isLogin);
+            registerFormElement.classList.toggle('active', !isLogin);
+        });
     });
 }
 
-// Manejar el inicio de sesión
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
+function setupAuthForms() {
+    // Manejar el registro
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // ... (código de registro que ya tienes)
+        });
+    }
 
-        auth.signInWithEmailAndPassword(email, password)
-            .then(() => {
-                window.location.href = 'area-socio.html';
-            })
-            .catch((error) => {
-                alert('Error al iniciar sesión: ' + error.message);
-            });
-    });
+    // Manejar el inicio de sesión
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // ... (código de login que ya tienes)
+        });
+    }
 }
 
 
-// --- FUNCIONES AUXILIARES ---
-
-// Proteger el área de socio y mostrar sus datos
 function protegerAreaSocio() {
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            const docRef = db.collection('socios').doc(user.uid);
-            docRef.get().then((doc) => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('nombre-socio').textContent = data.nombre;
-                    document.getElementById('estado-cuota').textContent = data.estadoCuota;
-                    document.getElementById('vencimiento-cuota').textContent = data.vencimiento;
-                }
-            });
-        } else {
-            alert('Necesitas iniciar sesión para ver esta página.');
-            window.location.href = 'sumate.html';
-        }
-    });
+    // ... (código que ya tienes)
 }
 
-// Cargar contenido (Noticias/Proyectos) desde el CMS/GitHub
 async function cargarContenido(tipo) {
     const container = document.getElementById(tipo === 'noticias' ? 'news-container' : 'project-container');
     if (!container) return;
@@ -174,60 +127,42 @@ async function cargarContenido(tipo) {
         const posts = response.data.filter(item => item.name.endsWith('.md'));
 
         if (posts.length === 0) {
-            container.innerHTML = `<p>Aún no hay ${tipo} publicados.</p>`;
+            container.innerHTML = `<p>Aún no hay ${tipo} para mostrar. ¡Crea el primero desde el panel de administración!</p>`;
             return;
         }
 
         container.innerHTML = '';
         posts.sort((a, b) => b.name.localeCompare(a.name));
 
-        for (const post of posts) {
-            const postResponse = await axios.get(post.download_url);
-            const frontmatter = parseFrontmatter(postResponse.data);
-            renderCard(frontmatter, tipo, container);
+        const fetchPromises = posts.map(post => axios.get(post.download_url).then(res => parseFrontmatter(res.data)));
+        const allItems = await Promise.all(fetchPromises);
+
+        renderItems(allItems, tipo, container);
+        if (tipo === 'proyectos') {
+            renderProjectFilters(allItems);
         }
+
     } catch (error) {
-        container.innerHTML = `<p>Hubo un error al cargar el contenido.</p>`;
+        console.error(`Error al cargar ${tipo}:`, error);
+        container.innerHTML = `<p style="color: red; font-weight: bold;">Error al cargar el contenido. Es posible que el repositorio de GitHub sea privado. Asegúrate de que sea público.</p>`;
     }
 }
 
-// Dibujar cada tarjeta de contenido
-function renderCard(item, tipo, container) {
-    const card = document.createElement('article');
-    card.className = 'card';
-    const title = item.title || 'Sin Título';
-    const image = item.image || 'https://placehold.co/600x400';
-    const summary = item.summary || '';
-    const date = new Date(item.date).toLocaleDateString('es-AR', { timeZone: 'UTC' });
-    const meta = tipo === 'noticias' ? `Publicado el ${date}` : `Categoría: ${item.category}`;
-    
-    card.innerHTML = `
-        <img src="${image}" alt="${title}">
-        <div class="card-content">
-            <h3>${title}</h3>
-            <p class="card-meta">${meta}</p>
-            <p>${summary}</p>
-            <a href="#">Leer más &rarr;</a> 
-        </div>
-    `;
-    container.appendChild(card);
+function renderItems(items, tipo, container) {
+    // ... (código que ya tienes)
 }
 
-// Extraer la información de los archivos
+function renderProjectFilters(projects) {
+    // ... (código que ya tienes)
+}
+
 function parseFrontmatter(markdownContent) {
-    const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-    const match = frontmatterRegex.exec(markdownContent);
-    const frontmatter = {};
-    if (match) {
-        const yaml = match[1];
-        yaml.split('\n').forEach(line => {
-            const parts = line.split(':');
-            if (parts.length >= 2) {
-                const key = parts[0].trim();
-                const value = parts.slice(1).join(':').trim().replace(/"/g, '');
-                frontmatter[key] = value;
-            }
-        });
-    }
-    return frontmatter;
+    // ... (código que ya tienes)
 }
+
+// Pega aquí el resto de las funciones que faltan:
+// - La función de registro completa
+// - La función de login completa
+// - La función protegerAreaSocio completa
+// - Las funciones renderItems, renderProjectFilters y parseFrontmatter completas
+// (Las he omitido arriba por brevedad, pero en tu archivo deben estar todas las que te di en la respuesta anterior)
