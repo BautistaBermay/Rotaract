@@ -30,37 +30,11 @@
             <div class="container">
                 <h2 class="section-title">Nuestros Proyectos</h2>
                 <p class="section-subtitle">Acciones que transforman. Conoce las iniciativas que hemos llevado a cabo para mejorar nuestra comunidad.</p>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Todos</button>
-                    <button class="filter-btn" data-filter="comunidad">Comunidad</button>
-                    <button class="filter-btn" data-filter="ambiente">Medio Ambiente</button>
-                    <button class="filter-btn" data-filter="salud">Salud</button>
+                <div id="project-filters" class="filter-buttons">
+                    <p>Cargando filtros...</p>
                 </div>
-                <div class="card-grid">
-                    <article class="card" data-category="ambiente">
-                        <img src="https://images.unsplash.com/photo-1611270418597-a6c7365b6b35?q=80&w=2070&auto=format&fit=crop" alt="Proyecto de Reforestación">
-                        <div class="card-content">
-                            <h3>Reforestación del Parque</h3>
-                            <p class="card-meta">Categoría: Medio Ambiente</p>
-                            <a href="#">Ver Detalles &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card" data-category="comunidad">
-                        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop" alt="Colecta de Alimentos">
-                        <div class="card-content">
-                            <h3>Colecta Anual de Alimentos</h3>
-                            <p class="card-meta">Categoría: Comunidad</p>
-                            <a href="#">Ver Detalles &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card" data-category="salud">
-                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" alt="Jornada de Salud">
-                        <div class="card-content">
-                            <h3>Jornada de Prevención y Salud</h3>
-                            <p class="card-meta">Categoría: Salud</p>
-                            <a href="#">Ver Detalles &rarr;</a>
-                        </div>
-                    </article>
+                <div id="project-container" class="card-grid">
+                    <p>Cargando proyectos...</p>
                 </div>
             </div>
         </section>
@@ -71,6 +45,7 @@
             <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="scripts.js" defer></script>
 </body>
 </html>
