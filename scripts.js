@@ -1,21 +1,8 @@
-// --- INICIALIZACIÓN DE FIREBASE ---
-const firebaseConfig = {
-  apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
-  authDomain: "rotaract-bahia-blanca.firebaseapp.com",
-  projectId: "rotaract-bahia-blanca",
-  storageBucket: "rotaract-bahia-blanca.appspot.com",
-  messagingSenderId: "341656264257",
-  appId: "1:341656264257:web:b4f344b6024b84341730c0",
-  measurementId: "G-VXKKFV30H8"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+// El objeto 'firebase' ahora existe porque lo cargamos en los archivos HTML.
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- LÓGICA PRINCIPAL ---
+// --- LÓGICA PRINCIPAL (Se ejecuta cuando toda la página ha cargado) ---
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Lógica del Header
     const header = document.querySelector('header');
@@ -39,10 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.forEach(section => observer.observe(section));
     }
 
-    // 3. Pestañas en sumate.html
+    // 3. Lógica para Pestañas en sumate.html
     setupTabs();
     
-    // 4. Formularios de Login/Registro
+    // 4. Lógica Formularios de Login/Registro
     setupAuthForms();
 
     // 5. Cargar contenido del CMS (Noticias y Proyectos)
@@ -73,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupTabs() {
     const loginFormElement = document.getElementById('login-form');
     if (!loginFormElement) return;
-
     const registerFormElement = document.getElementById('register-form');
     const tabButtons = document.querySelectorAll('.tab-button');
     tabButtons.forEach(button => {
@@ -96,21 +82,17 @@ function setupAuthForms() {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const passwordConfirm = document.getElementById('register-password-confirm').value;
-
             if (password !== passwordConfirm) {
                 alert('Las contraseñas no coinciden.');
                 return;
             }
-
             auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    return db.collection('socios').doc(userCredential.user.uid).set({
-                        nombre: name,
-                        email: email,
-                        estadoCuota: 'Pendiente',
-                        vencimiento: 'N/A'
-                    });
-                })
+                .then(userCredential => db.collection('socios').doc(userCredential.user.uid).set({
+                    nombre: name,
+                    email: email,
+                    estadoCuota: 'Pendiente',
+                    vencimiento: 'N/A'
+                }))
                 .then(() => {
                     alert('¡Registro exitoso! Serás dirigido a tu panel.');
                     window.location.href = 'area-socio.html';
@@ -125,7 +107,6 @@ function setupAuthForms() {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
                     window.location.href = 'area-socio.html';
@@ -142,9 +123,12 @@ function protegerAreaSocio() {
             docRef.get().then(doc => {
                 if (doc.exists) {
                     const data = doc.data();
-                    document.getElementById('nombre-socio').textContent = data.nombre;
-                    document.getElementById('estado-cuota').textContent = data.estadoCuota;
-                    document.getElementById('vencimiento-cuota').textContent = data.vencimiento;
+                    const nombreSocioEl = document.getElementById('nombre-socio');
+                    const estadoCuotaEl = document.getElementById('estado-cuota');
+                    const vencimientoCuotaEl = document.getElementById('vencimiento-cuota');
+                    if(nombreSocioEl) nombreSocioEl.textContent = data.nombre;
+                    if(estadoCuotaEl) estadoCuotaEl.textContent = data.estadoCuota;
+                    if(vencimientoCuotaEl) vencimientoCuotaEl.textContent = data.vencimiento;
                 }
             });
         } else {
@@ -166,16 +150,14 @@ async function cargarContenido(tipo) {
         const posts = response.data.filter(item => item.name.endsWith('.md'));
 
         if (posts.length === 0) {
-            // No hacer nada, dejar el contenido de ejemplo
-            return;
+            return; // No hacer nada, dejar el contenido de ejemplo
         }
 
-        container.innerHTML = ''; // Limpiar contenido de ejemplo SOLO si hay contenido del CMS
+        container.innerHTML = ''; // Limpiar contenido de ejemplo
         posts.sort((a, b) => b.name.localeCompare(a.name));
 
         const fetchPromises = posts.map(post => axios.get(post.download_url).then(res => parseFrontmatter(res.data)));
         const allItems = await Promise.all(fetchPromises);
-
         renderItems(allItems, tipo, container);
         if (tipo === 'proyectos') {
             renderProjectFilters(allItems);
@@ -223,36 +205,3 @@ function renderProjectFilters(projects) {
         button.textContent = category;
         button.dataset.filter = category.toLowerCase();
         if (category === 'Todos') button.classList.add('active');
-        
-        button.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            document.querySelectorAll('.card-grid .card').forEach(card => {
-                if (category === 'Todos' || card.dataset.category === category.toLowerCase()) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-        filterContainer.appendChild(button);
-    });
-}
-
-function parseFrontmatter(markdownContent) {
-    const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-    const match = frontmatterRegex.exec(markdownContent);
-    const frontmatter = {};
-    if (match) {
-        const yaml = match[1];
-        yaml.split('\n').forEach(line => {
-            const parts = line.split(':');
-            if (parts.length >= 2) {
-                const key = parts[0].trim();
-                const value = parts.slice(1).join(':').trim().replace(/"/g, '');
-                frontmatter[key] = value;
-            }
-        });
-    }
-    return frontmatter;
-}

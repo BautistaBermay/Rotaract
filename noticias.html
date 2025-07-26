@@ -30,7 +30,6 @@
             <div class="container">
                 <h2 class="section-title">Blog de Noticias</h2>
                 <p class="section-subtitle">Mantente al día con nuestras últimas actividades, logros e historias de impacto.</p>
-                
                 <div id="news-container" class="card-grid">
                     <article class="card">
                         <img src="https://images.unsplash.com/photo-1516937942-0156de448342?q=80&w=2070&auto=format&fit=crop" alt="Jornada Ambiental">
@@ -41,26 +40,7 @@
                             <a href="noticia-ejemplo.html">Leer más &rarr;</a>
                         </div>
                     </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1599050870356-5d6c5a683a99?q=80&w=2070&auto=format&fit=crop" alt="Campaña Juguetes">
-                        <div class="card-content">
-                            <h3>Campaña del Día del Niño: ¡Gracias a todos!</h3>
-                            <p class="card-meta">Publicado el 15 de julio, 2025</p>
-                            <p>Gracias a la colaboración de toda la comunidad, pudimos repartir sonrisas en más de 5 comedores.</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1556761175-b413da4b248q?q=80&w=1974&auto=format&fit=crop" alt="Nuevos Socios">
-                        <div class="card-content">
-                            <h3>Damos la bienvenida a nuevos socios</h3>
-                            <p class="card-meta">Publicado el 10 de julio, 2025</p>
-                            <p>El club crece y le damos la bienvenida a los nuevos miembros que se suman a esta gran familia.</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
                 </div>
-
             </div>
         </section>
     </main>
@@ -70,8 +50,21 @@
             <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
         </div>
     </footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
+            authDomain: "rotaract-bahia-blanca.firebaseapp.com",
+            projectId: "rotaract-bahia-blanca",
+            storageBucket: "rotaract-bahia-blanca.appspot.com",
+            messagingSenderId: "341656264257",
+            appId: "1:341656264257:web:b4f344b6024b84341730c0",
+            measurementId: "G-VXKKFV30H8"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <script src="scripts.js" defer></script>
 </body>
 </html>
