@@ -75,31 +75,51 @@ function setupTabs() {
     });
 }
 
+// Reemplaza la función setupAuthForms que ya tienes por esta:
 function setupAuthForms() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
+        // Añadimos un div vacío para nuestra notificación
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        registerForm.prepend(notification); // Lo inserta al principio del formulario
+
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const passwordConfirm = document.getElementById('register-password-confirm').value;
+
             if (password !== passwordConfirm) {
-                alert('Las contraseñas no coinciden.');
+                showNotification('Las contraseñas no coinciden.', 'error');
                 return;
             }
+
             auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => db.collection('socios').doc(userCredential.user.uid).set({
-                    nombre: name,
-                    email: email,
-                    estadoCuota: 'Pendiente',
-                    vencimiento: 'N/A'
-                }))
-                .then(() => {
-                    alert('¡Registro exitoso! Serás dirigido a tu panel.');
-                    window.location.href = 'area-socio.html';
+                .then(userCredential => {
+                    return db.collection('socios').doc(userCredential.user.uid).set({
+                        nombre: name,
+                        email: email,
+                        estadoCuota: 'Pendiente',
+                        vencimiento: 'N/A'
+                    });
                 })
-                .catch(error => alert('Error al registrar: ' + error.message));
+                .then(() => {
+                    // ¡AQUÍ ESTÁ LA MAGIA NUEVA!
+                    registerForm.reset(); // Limpiar el formulario
+                    showNotification('¡Registro exitoso! Ahora inicia sesión para continuar.', 'success');
+                    
+                    // Esperar un momento y cambiar de pestaña
+                    setTimeout(() => {
+                        const loginTabButton = document.querySelector('.tab-button'); // El primer botón es el de login
+                        loginTabButton.click();
+                        document.getElementById('login-email').focus(); // Poner el cursor en el email
+                    }, 2500); // 2.5 segundos después de mostrar el mensaje
+                })
+                .catch(error => {
+                    showNotification('Error: ' + error.message, 'error');
+                });
         });
     }
 
@@ -116,6 +136,22 @@ function setupAuthForms() {
                 .catch(error => alert('Error al iniciar sesión: ' + error.message));
         });
     }
+}
+
+// NUEVA FUNCIÓN para mostrar notificaciones
+function showNotification(message, type) {
+    const notification = document.querySelector('.notification');
+    if (!notification) return;
+
+    notification.textContent = message;
+    notification.className = `notification ${type}`; // success o error
+    
+    notification.classList.add('show');
+
+    // Ocultar la notificación después de 5 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 5000);
 }
 
 function protegerAreaSocio() {

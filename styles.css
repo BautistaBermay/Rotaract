@@ -111,3 +111,30 @@ header .container { display: flex; justify-content: space-between; align-items: 
 footer { width: 100%; background-color: var(--color-text-dark); color: var(--color-white); text-align: center; padding: 50px 0; margin-top: auto; }
 footer p { color: rgba(255, 255, 255, 0.7); margin: 5px 0; }
 footer .footer-logo { font-size: 28px; margin-bottom: 15px; }
+/* --- NUEVO: Estilos para Notificación --- */
+.notification {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    display: none; /* Oculto por defecto */
+}
+
+.notification.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    background-color: #28a745; /* Verde de éxito */
+}
+
+.notification.error {
+    background-color: #dc3545; /* Rojo de error */
+}
