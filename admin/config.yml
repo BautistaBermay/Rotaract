@@ -28,12 +28,15 @@ collections:
       - { label: "Imagen", name: "image", widget: "image" }
       - { label: "Resumen", name: "summary", widget: "text" }
       - { label: "Contenido Completo (Opcional)", name: "body", widget: "markdown", required: false }
-      - name: "actas"
-    label: "Actas"
+  
+  # La sección de "Actas" empieza aquí, al mismo nivel que "proyectos" y "noticias"
+  - name: "actas"
+    label: "Actas de Reunión"
     folder: "_posts/actas"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-acta"
     fields:
       - { label: "Título del Acta (Ej: Acta Reunión Julio 2025)", name: "title", widget: "string" }
       - { label: "Fecha del Acta", name: "date", widget: "date" }
-      - { label: "Archivo PDF", name: "pdf", widget: "file" }
+      - { label: "Archivo PDF (Opcional)", name: "pdf", widget: "file", required: false }
+      - { label: "Contenido del Acta (Si no subes PDF)", name: "body", widget: "markdown", required: false }

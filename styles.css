@@ -138,3 +138,27 @@ footer .footer-logo { font-size: 28px; margin-bottom: 15px; }
 .notification.error {
     background-color: #dc3545; /* Rojo de error */
 }
+/* Estilos para la tabla de Actas */
+.actas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+    font-size: 16px;
+}
+.actas-table th, .actas-table td {
+    border: 1px solid var(--color-border);
+    padding: 12px 15px;
+    text-align: left;
+}
+.actas-table th {
+    background-color: var(--color-pink-pastel);
+    font-family: var(--font-headings);
+    font-weight: 600;
+}
+.actas-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+.actas-table a {
+    text-decoration: none;
+    font-weight: bold;
+}
