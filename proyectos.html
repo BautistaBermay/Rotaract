@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyectos - Rotaract Club Bahía Blanca</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -31,10 +31,39 @@
                 <h2 class="section-title">Nuestros Proyectos</h2>
                 <p class="section-subtitle">Acciones que transforman. Conoce las iniciativas que hemos llevado a cabo para mejorar nuestra comunidad.</p>
                 <div id="project-filters" class="filter-buttons">
-                    <p>Cargando filtros...</p>
+                    <button class="filter-btn active" data-filter="todos">Todos</button>
+                    <button class="filter-btn" data-filter="comunidad">Comunidad</button>
+                    <button class="filter-btn" data-filter="medio ambiente">Medio Ambiente</button>
+                    <button class="filter-btn" data-filter="salud">Salud</button>
                 </div>
-                <div id="project-container" class="card-grid">
-                    <p>Cargando proyectos...</p>
+                 <div id="project-container" class="card-grid">
+                    <article class="card" data-category="medio ambiente">
+                        <img src="https://images.unsplash.com/photo-1611270418597-a6c7365b6b35?q=80&w=2070&auto=format&fit=crop" alt="Proyecto de Reforestación">
+                        <div class="card-content">
+                            <h3>Reforestación del Parque</h3>
+                            <p class="card-meta">Categoría: Medio Ambiente</p>
+                            <p>Junto a voluntarios, plantamos más de 100 árboles nativos en el Parque de la Ciudad.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="comunidad">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop" alt="Colecta de Alimentos">
+                        <div class="card-content">
+                            <h3>Colecta Anual de Alimentos</h3>
+                            <p class="card-meta">Categoría: Comunidad</p>
+                            <p>Recolectamos más de 500kg de alimentos no perecederos para comedores locales.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="salud">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" alt="Jornada de Salud">
+                        <div class="card-content">
+                            <h3>Jornada de Prevención y Salud</h3>
+                            <p class="card-meta">Categoría: Salud</p>
+                            <p>Realizamos controles de presión y glucosa gratuitos en la plaza principal del barrio.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
