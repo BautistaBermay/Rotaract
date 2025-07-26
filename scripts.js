@@ -1,5 +1,4 @@
 // El objeto 'firebase' es cargado por los scripts en cada archivo HTML.
-// Este script asume que 'firebase' ya existe.
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -33,17 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Lógica Formularios de Login/Registro
     setupAuthForms();
 
-    // 5. Cargar contenido del CMS (Noticias y Proyectos)
+    // 5. Cargar contenido del CMS
     if (document.getElementById('news-container')) {
         cargarContenido('noticias');
     }
     if (document.getElementById('project-container')) {
         cargarContenido('proyectos');
     }
+    if (document.getElementById('actas-container')) {
+        cargarContenido('actas');
+    }
 
-    // 6. Proteger el Área de Socio y Botón de Logout
-    if (window.location.pathname.includes('area-socio.html')) {
-        protegerAreaSocio();
+    // 6. Proteger Páginas de Socios y Botón de Logout
+    if (window.location.pathname.includes('area-socio.html') || window.location.pathname.includes('actas.html')) {
+        protegerPaginasSocio();
     }
     const logoutButton = document.getElementById('logout-button');
     if (logoutButton) {
@@ -75,51 +77,31 @@ function setupTabs() {
     });
 }
 
-// Reemplaza la función setupAuthForms que ya tienes por esta:
 function setupAuthForms() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
-        // Añadimos un div vacío para nuestra notificación
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        registerForm.prepend(notification); // Lo inserta al principio del formulario
-
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const passwordConfirm = document.getElementById('register-password-confirm').value;
-
             if (password !== passwordConfirm) {
-                showNotification('Las contraseñas no coinciden.', 'error');
+                alert('Las contraseñas no coinciden.');
                 return;
             }
-
             auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    return db.collection('socios').doc(userCredential.user.uid).set({
-                        nombre: name,
-                        email: email,
-                        estadoCuota: 'Pendiente',
-                        vencimiento: 'N/A'
-                    });
-                })
+                .then(userCredential => db.collection('socios').doc(userCredential.user.uid).set({
+                    nombre: name,
+                    email: email,
+                    estadoCuota: 'Pendiente',
+                    vencimiento: 'N/A'
+                }))
                 .then(() => {
-                    // ¡AQUÍ ESTÁ LA MAGIA NUEVA!
-                    registerForm.reset(); // Limpiar el formulario
-                    showNotification('¡Registro exitoso! Ahora inicia sesión para continuar.', 'success');
-                    
-                    // Esperar un momento y cambiar de pestaña
-                    setTimeout(() => {
-                        const loginTabButton = document.querySelector('.tab-button'); // El primer botón es el de login
-                        loginTabButton.click();
-                        document.getElementById('login-email').focus(); // Poner el cursor en el email
-                    }, 2500); // 2.5 segundos después de mostrar el mensaje
+                    alert('¡Registro exitoso! Serás dirigido a tu panel.');
+                    window.location.href = 'area-socio.html';
                 })
-                .catch(error => {
-                    showNotification('Error: ' + error.message, 'error');
-                });
+                .catch(error => alert('Error al registrar: ' + error.message));
         });
     }
 
@@ -138,48 +120,34 @@ function setupAuthForms() {
     }
 }
 
-// NUEVA FUNCIÓN para mostrar notificaciones
-function showNotification(message, type) {
-    const notification = document.querySelector('.notification');
-    if (!notification) return;
-
-    notification.textContent = message;
-    notification.className = `notification ${type}`; // success o error
-    
-    notification.classList.add('show');
-
-    // Ocultar la notificación después de 5 segundos
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 5000);
-}
-
-function protegerAreaSocio() {
+function protegerPaginasSocio() {
     auth.onAuthStateChanged(user => {
         if (user) {
-            const docRef = db.collection('socios').doc(user.uid);
-            docRef.get().then(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    const nombreSocioEl = document.getElementById('nombre-socio');
-                    const estadoCuotaEl = document.getElementById('estado-cuota');
-                    const vencimientoCuotaEl = document.getElementById('vencimiento-cuota');
-                    if(nombreSocioEl) nombreSocioEl.textContent = data.nombre;
-                    if(estadoCuotaEl) estadoCuotaEl.textContent = data.estadoCuota;
-                    if(vencimientoCuotaEl) vencimientoCuotaEl.textContent = data.vencimiento;
-                }
-            });
+            // Si estamos en el area-socio, mostramos sus datos
+            if (window.location.pathname.includes('area-socio.html')) {
+                const docRef = db.collection('socios').doc(user.uid);
+                docRef.get().then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const nombreSocioEl = document.getElementById('nombre-socio');
+                        const estadoCuotaEl = document.getElementById('estado-cuota');
+                        const vencimientoCuotaEl = document.getElementById('vencimiento-cuota');
+                        if(nombreSocioEl) nombreSocioEl.textContent = data.nombre;
+                        if(estadoCuotaEl) estadoCuotaEl.textContent = data.estadoCuota;
+                        if(vencimientoCuotaEl) vencimientoCuotaEl.textContent = data.vencimiento;
+                    }
+                });
+            }
         } else {
-            // Retrasar la redirección para que el usuario pueda ver un mensaje si lo hubiera
-            setTimeout(() => {
-                window.location.href = 'sumate.html';
-            }, 500);
+            // Si no hay usuario, a la página de login
+            alert('Necesitas iniciar sesión para ver esta página.');
+            window.location.href = 'sumate.html';
         }
     });
 }
 
 async function cargarContenido(tipo) {
-    const container = document.getElementById(tipo === 'noticias' ? 'news-container' : 'project-container');
+    const container = document.getElementById(`${tipo}-container`);
     if (!container) return;
 
     const GITHUB_USER = 'BautistaBermay';
@@ -188,31 +156,72 @@ async function cargarContenido(tipo) {
 
     try {
         const response = await axios.get(API_URL);
-        if (!response.data || response.data.length === 0) {
-            console.log(`No hay ${tipo} en el CMS, se dejará el contenido de ejemplo.`);
+        const files = response.data.filter(item => item.name.endsWith('.md'));
+
+        if (files.length === 0) {
+            container.innerHTML = `<p style="text-align:center;">Aún no hay ${tipo} para mostrar.</p>`;
             return;
         }
+
+        container.innerHTML = '';
+        files.sort((a, b) => b.name.localeCompare(a.name));
+
+        const allItemsPromises = files.map(file => 
+            axios.get(file.download_url).then(res => {
+                const frontmatter = parseFrontmatter(res.data);
+                frontmatter.download_url = file.download_url; // Añadir URL de descarga para las actas
+                return frontmatter;
+            })
+        );
         
-        const posts = response.data.filter(item => item.name.endsWith('.md'));
+        const allItems = await Promise.all(allItemsPromises);
 
-        if (posts.length === 0) {
-            return; 
+        if (tipo === 'actas') {
+            renderActas(allItems);
+        } else {
+            renderItems(allItems, tipo, container);
         }
-
-        container.innerHTML = ''; // Limpiar contenido de ejemplo
-        posts.sort((a, b) => b.name.localeCompare(a.name));
-
-        const fetchPromises = posts.map(post => axios.get(post.download_url).then(res => parseFrontmatter(res.data)));
-        const allItems = await Promise.all(fetchPromises);
-        renderItems(allItems, tipo, container);
+        
         if (tipo === 'proyectos') {
             renderProjectFilters(allItems);
         }
 
     } catch (error) {
         console.error(`Error al cargar ${tipo}:`, error);
-        // No hacer nada si falla, el contenido de ejemplo se quedará visible
+        container.innerHTML = `<p style="color: red; text-align:center;">No se pudo cargar el contenido. Es posible que el repositorio de GitHub sea privado.</p>`;
     }
+}
+
+function renderActas(items) {
+    const container = document.getElementById('actas-container');
+    const table = document.createElement('table');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.innerHTML = `
+        <thead>
+            <tr style="border-bottom: 2px solid var(--color-text-dark);">
+                <th style="padding: 15px; text-align: left;">Título del Documento</th>
+                <th style="padding: 15px; text-align: left;">Fecha</th>
+                <th style="padding: 15px; text-align: right;">Descarga</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    const tbody = table.querySelector('tbody');
+    items.forEach(item => {
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid var(--color-border)';
+        const date = new Date(item.date).toLocaleDateString('es-AR', { timeZone: 'UTC' });
+        row.innerHTML = `
+            <td style="padding: 15px;">${item.title || 'Sin Título'}</td>
+            <td style="padding: 15px;">${date}</td>
+            <td style="padding: 15px; text-align: right;">
+                <a href="${item.pdf || item.download_url}" class="button button-primary" target="_blank" rel="noopener noreferrer">Descargar</a>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    container.appendChild(table);
 }
 
 function renderItems(items, tipo, container) {

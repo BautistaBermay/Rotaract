@@ -28,3 +28,12 @@ collections:
       - { label: "Imagen", name: "image", widget: "image" }
       - { label: "Resumen", name: "summary", widget: "text" }
       - { label: "Contenido Completo (Opcional)", name: "body", widget: "markdown", required: false }
+      - name: "actas"
+    label: "Actas"
+    folder: "_posts/actas"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título del Acta (Ej: Acta Reunión Julio 2025)", name: "title", widget: "string" }
+      - { label: "Fecha del Acta", name: "date", widget: "date" }
+      - { label: "Archivo PDF", name: "pdf", widget: "file" }
