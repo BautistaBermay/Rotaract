@@ -1,19 +1,39 @@
+# Reemplaza "TU_USUARIO/TU_REPOSITORIO" con tu repo de GitHub.
+# Ejemplo: "rotaract-bahia/sitio-web"
 backend:
   name: git-gateway
-  branch: main # o master, dependiendo de tu rama principal
+  branch: main # o la rama principal que uses (ej. master)
 
+# Esto permite que Netlify Identity gestione los usuarios del CMS.
+# Debes habilitar Identity en tu sitio de Netlify.
+publish_mode: editorial_workflow
+
+# Carpeta donde se subirán las imágenes desde el CMS
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
 
 collections:
-  - name: "noticias"
-    label: "Noticias"
-    folder: "_posts/noticias"
+  - name: "noticias" # Nombre de la colección
+    label: "Noticias" # Etiqueta en la UI del CMS
+    folder: "_posts/noticias" # La carpeta donde se guardan los archivos
+    create: true # Permitir crear nuevas entradas
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Nombre del archivo
+    fields: # Los campos para cada entrada
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha de Publicación", name: "date", widget: "datetime"}
+      - {label: "Imagen Principal", name: "image", widget: "image"}
+      - {label: "Resumen (para la tarjeta)", name: "summary", widget: "text"}
+      - {label: "Contenido Completo", name: "body", widget: "markdown"}
+
+  - name: "proyectos"
+    label: "Proyectos"
+    folder: "_posts/proyectos"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Fecha", name: "date", widget: "datetime" }
-      - { label: "Imagen", name: "image", widget: "image" }
-      - { label: "Resumen", name: "summary", widget: "text" }
-      - { label: "Contenido", name: "body", widget: "markdown" }
+      - {label: "Nombre del Proyecto", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Categoría", name: "category", widget: "select", options: ["Comunidad", "Medio Ambiente", "Salud", "Educación"]}
+      - {label: "Imagen Principal", name: "image", widget: "image"}
+      - {label: "Resumen", name: "summary", widget: "text"}
+      - {label: "Descripción Completa (Opcional)", name: "body", widget: "markdown", required: false}

@@ -1,80 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Socios - Rotaract Club Bahía Blanca</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Sumate - Rotaract Club Bahía Blanca</title>
 </head>
 <body>
     <header>
-        <div class="container">
-            <a href="index.html" class="logo">Rotaract<span>.</span></a>
-            <div class="main-nav">
-                <nav>
-                    <a href="index.html">INICIO</a>
-                    <a href="quienes-somos.html">QUIÉNES SOMOS</a>
-                    <a href="proyectos.html">PROYECTOS</a>
-                    <a href="noticias.html">NOTICIAS</a>
-                    <a href="contacto.html">CONTACTO</a>
-                </nav>
-                <a href="sumate.html" class="button button-primary">SUMATE</a>
-            </div>
-        </div>
-    </header>
+        </header>
+
     <main>
-        <section class="section fade-in-section">
-            <div class="portal-container">
-                <div class="portal-tabs">
-                    <button class="tab-button active">Iniciar Sesión</button>
-                    <button class="tab-button">Quiero Ser Socio</button>
+        <section class="container fade-in">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-link active" onclick="openTab(event, 'login')">Iniciar Sesión</button>
+                    <button class="tab-link" onclick="openTab(event, 'register')">Quiero Ser Socio</button>
                 </div>
-                <div id="login-form" class="portal-form active">
-                    <h3 style="text-align:center;">Acceso de Socios</h3>
-                    <form id="loginForm">
-                        <div class="form-group"><label for="login-email">Correo Electrónico</label><input type="email" id="login-email" required></div>
-                        <div class="form-group"><label for="login-password">Contraseña</label><input type="password" id="login-password" required></div>
-                        <button type="submit" class="button button-primary" style="width: 100%;">Iniciar Sesión</button>
+
+                <div id="login" class="tab-content" style="display: block;">
+                    <h2>Acceso a Socios</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Contraseña</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <p id="login-error" class="error-message"></p>
+                        <button type="submit" class="btn btn-primary full-width">Ingresar</button>
                     </form>
                 </div>
-                <div id="register-form" class="portal-form">
-                     <h3 style="text-align:center;">Únete a Rotaract</h3>
-                    <form id="registerForm">
-                        <div class="form-group"><label for="register-name">Nombre y Apellido</label><input type="text" id="register-name" required></div>
-                        <div class="form-group"><label for="register-email">Correo Electrónico</label><input type="email" id="register-email" required></div>
-                        <div class="form-group"><label for="register-password">Crear Contraseña</label><input type="password" id="register-password" required></div>
-                        <div class="form-group"><label for="register-password-confirm">Confirmar Contraseña</label><input type="password" id="register-password-confirm" required></div>
-                        <button type="submit" class="button button-primary" style="width: 100%;">Crear Cuenta</button>
+
+                <div id="register" class="tab-content">
+                    <h2>Formulario de Postulación</h2>
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="register-name">Nombre y Apellido</label>
+                            <input type="text" id="register-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Crear Contraseña</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Confirmar Contraseña</label>
+                            <input type="password" id="register-confirm-password" required>
+                        </div>
+                        <p id="register-error" class="error-message"></p>
+                        <button type="submit" class="btn btn-primary full-width">Enviar Postulación</button>
                     </form>
                 </div>
             </div>
         </section>
     </main>
+
     <footer>
-        <div class="container">
-            <div class="footer-logo">Rotaract<span>.</span></div>
-            <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+        </footer>
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
-            authDomain: "rotaract-bahia-blanca.firebaseapp.com",
-            projectId: "rotaract-bahia-blanca",
-            storageBucket: "rotaract-bahia-blanca.appspot.com",
-            messagingSenderId: "341656264257",
-            appId: "1:341656264257:web:b4f344b6024b84341730c0",
-            measurementId: "G-VXKKFV30H8"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script>
-    <script src="scripts.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script src="scripts.js"></script>
 </body>
 </html>

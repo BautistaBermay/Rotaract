@@ -3,104 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotaract Club Bahía Blanca - Inicio</title>
+    <title>Rotaract Club Bahía Blanca</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> </head>
 <body>
 
     <header>
-        <div class="container">
-            <a href="index.html" class="logo">Rotaract<span>.</span></a>
-            <div class="main-nav">
-                <nav>
-                    <a href="index.html" class="active">INICIO</a>
-                    <a href="quienes-somos.html">QUIÉNES SOMOS</a>
-                    <a href="proyectos.html">PROYECTOS</a>
-                    <a href="noticias.html">NOTICIAS</a>
-                    <a href="contacto.html">CONTACTO</a>
-                </nav>
-                <a href="sumate.html" class="button button-primary">SUMATE</a>
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">Rotaract Bahía Blanca</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+                <li class="nav-item"><a href="quienes-somos.html" class="nav-link">Quiénes Somos</a></li>
+                <li class="nav-item"><a href="proyectos.html" class="nav-link">Proyectos</a></li>
+                <li class="nav-item"><a href="noticias.html" class="nav-link">Noticias</a></li>
+                <li class="nav-item"><a href="contacto.html" class="nav-link">Contacto</a></li>
+                <li class="nav-item"><a href="sumate.html" class="nav-link special-button">SUMATE</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
-        </div>
+        </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container fade-in-section">
-                <h1>Jóvenes en acción por <span>Bahía Blanca</span>.</h1>
-                <p class="section-subtitle">Somos Rotaract Club Bahía Blanca, una red de líderes que impulsan cambios positivos y duraderos en nuestra comunidad.</p>
-                <a href="proyectos.html" class="button button-primary">Nuestros Proyectos</a>
+        <section class="hero-section">
+            <div class="hero-content fade-in">
+                <h1>Jóvenes en acción, transformando el futuro.</h1>
+                <p>Somos el Rotaract Club Bahía Blanca, un grupo de líderes que impulsa cambios positivos en nuestra comunidad.</p>
+                <a href="proyectos.html" class="btn btn-primary">Ver Proyectos</a>
+                <a href="sumate.html" class="btn btn-secondary">Quiero ser Socio</a>
             </div>
         </section>
 
-        <section class="section fade-in-section" style="background-color: var(--color-pink-pastel);">
-            <div class="container">
-                <h2 class="section-title">Últimas Noticias</h2>
-                <!-- Contenido de Ejemplo -->
-                <div id="news-container" class="card-grid" style="margin-top: 60px;">
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1516937942-0156de448342?q=80&w=2070&auto=format&fit=crop" alt="Jornada Ambiental">
-                        <div class="card-content">
-                            <h3>Exitosa jornada de limpieza de costas</h3>
-                            <p class="card-meta">Publicado el 20 de julio, 2025</p>
-                            <p>Una increíble jornada donde más de 50 voluntarios se sumaron para limpiar nuestras costas.</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1599050870356-5d6c5a683a99?q=80&w=2070&auto=format&fit=crop" alt="Campaña Juguetes">
-                        <div class="card-content">
-                            <h3>Campaña del Día del Niño: ¡Gracias a todos!</h3>
-                            <p class="card-meta">Publicado el 15 de julio, 2025</p>
-                            <p>Gracias a la colaboración de toda la comunidad, pudimos repartir sonrisas en más de 5 comedores.</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img src="https://images.unsplash.com/photo-1556761175-b413da4b248q?q=80&w=1974&auto=format&fit=crop" alt="Nuevos Socios">
-                        <div class="card-content">
-                            <h3>Damos la bienvenida a nuevos socios</h3>
-                            <p class="card-meta">Publicado el 10 de julio, 2025</p>
-                            <p>El club crece y le damos la bienvenida a los nuevos miembros que se suman a esta gran familia.</p>
-                            <a href="noticia-ejemplo.html">Leer más &rarr;</a>
-                        </div>
-                    </article>
+        <section class="container fade-in">
+            <h2>Últimas Noticias</h2>
+            <div class="news-grid" id="latest-news-container">
+                <div class="card">
+                    <img src="assets/images/noticia1.jpg" alt="Noticia 1">
+                    <div class="card-content">
+                        <h3>Colecta Anual de Juguetes</h3>
+                        <p>Este año volvimos a superar nuestras metas gracias a la colaboración de todos. ¡Miles de sonrisas garantizadas!</p>
+                        <a href="noticia-ejemplo.html" class="card-link">Leer más</a>
+                    </div>
                 </div>
+                <div class="card">
+                    <img src="assets/images/noticia2.jpg" alt="Noticia 2">
+                    <div class="card-content">
+                        <h3>Jornada de Reforestación</h3>
+                        <p>Plantamos más de 100 árboles nativos en el parque de la ciudad, un pequeño paso para un futuro más verde.</p>
+                        <a href="noticia-ejemplo.html" class="card-link">Leer más</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="assets/images/noticia3.jpg" alt="Noticia 3">
+                    <div class="card-content">
+                        <h3>Charla sobre Salud Mental</h3>
+                        <p>Organizamos un encuentro abierto a la comunidad para hablar sobre la importancia del bienestar emocional.</p>
+                        <a href="noticia-ejemplo.html" class="card-link">Leer más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                 <a href="noticias.html" class="btn btn-primary">Ver todas las noticias</a>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <div class="footer-logo">Rotaract<span>.</span></div>
-            <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
-        </div>
+        <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
     </footer>
-    
-    <!-- Librerías Externas -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- Configuración de Firebase (tu código) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
-            authDomain: "rotaract-bahia-blanca.firebaseapp.com",
-            projectId: "rotaract-bahia-blanca",
-            storageBucket: "rotaract-bahia-blanca.appspot.com",
-            messagingSenderId: "341656264257",
-            appId: "1:341656264257:web:b4f344b6024b84341730c0",
-            measurementId: "G-VXKKFV30H8"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script>
-
-    <!-- Nuestro Script Principal (SIEMPRE AL FINAL) -->
-    <script src="scripts.js" defer></script>
+    <script src="scripts.js"></script>
 </body>
 </html>

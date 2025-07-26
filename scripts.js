@@ -1,207 +1,265 @@
-// El objeto 'firebase' ahora existe porque lo cargamos en los archivos HTML.
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// --- LÓGICA PRINCIPAL (Se ejecuta cuando toda la página ha cargado) ---
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Lógica del Header
-    const header = document.querySelector('header');
-    if (header) {
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 10);
+
+    // --- CONFIGURACIÓN ---
+    // ¡IMPORTANTE! El usuario debe completar estas variables.
+    const firebaseConfig = {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_AUTH_DOMAIN",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_STORAGE_BUCKET",
+        messagingSenderId: "TU_MESSAGING_SENDER_ID",
+        appId: "TU_APP_ID"
+    };
+
+    // Configuración para cargar contenido desde GitHub
+    const GITHUB_USER = 'TU_USUARIO_DE_GITHUB';
+    const GITHUB_REPO = 'TU_REPOSITORIO';
+    const GITHUB_BRANCH = 'main'; // o 'master'
+
+
+    // --- INICIALIZACIÓN DE FIREBASE ---
+    // Solo inicializar si no ha sido inicializado antes
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // --- LÓGICA GENERAL DEL FRONTEND ---
+    
+    // Menú hamburguesa para móviles
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
     }
 
-    // 2. Animaciones de Entrada
-    const sections = document.querySelectorAll('.fade-in-section');
-    if (sections.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
+    // Animación de fade-in al hacer scroll
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                return;
+            }
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        });
+    }, appearOptions);
+
+    faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
+
+    // --- CARGA DE CONTENIDO DINÁMICO DESDE GITHUB ---
+
+    // Función para parsear el Front Matter de los archivos Markdown
+    function parseFrontMatter(text) {
+        const frontMatterRegex = /^---\s*([\s\S]*?)\s*---/;
+        const match = frontMatterRegex.exec(text);
+        const frontMatter = {};
+        if (match) {
+            const yaml = match[1];
+            yaml.split('\n').forEach(line => {
+                const parts = line.split(':');
+                if (parts.length >= 2) {
+                    const key = parts[0].trim();
+                    const value = parts.slice(1).join(':').trim();
+                    frontMatter[key] = value.replace(/"/g, ''); // Limpiar comillas
                 }
             });
-        }, { threshold: 0.1 });
-        sections.forEach(section => observer.observe(section));
+        }
+        return frontMatter;
     }
 
-    // 3. Lógica para Pestañas en sumate.html
-    setupTabs();
-    
-    // 4. Lógica Formularios de Login/Registro
-    setupAuthForms();
+    // Función para cargar contenido (noticias o proyectos)
+    async function loadContent(type, containerId, limit = 0) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
 
-    // 5. Cargar contenido del CMS (Noticias y Proyectos)
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/_posts/${type}?ref=${GITHUB_BRANCH}`;
+        
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error(`Error al cargar ${type} desde GitHub`);
+            
+            let items = await response.json();
+            // Ordenar por fecha (nombre de archivo) descendente
+            items.sort((a, b) => b.name.localeCompare(a.name));
+
+            if (limit > 0) {
+                items = items.slice(0, limit);
+            }
+
+            let contentHTML = '';
+            for (const item of items) {
+                const fileResponse = await fetch(item.download_url);
+                const fileContent = await fileResponse.text();
+                const data = parseFrontMatter(fileContent);
+
+                if (type === 'noticias') {
+                    contentHTML += `
+                        <div class="card fade-in">
+                            <img src="${data.image}" alt="${data.title}">
+                            <div class="card-content">
+                                <h3>${data.title}</h3>
+                                <p>${data.summary}</p>
+                                <a href="noticia-ejemplo.html?post=${item.name}" class="card-link">Leer más</a>
+                            </div>
+                        </div>`;
+                } else if (type === 'proyectos') {
+                     contentHTML += `
+                        <div class="card project-card fade-in" data-category="${data.category.toLowerCase().replace(' ', '-')}">
+                            <div class="card-category">${data.category}</div>
+                            <img src="${data.image}" alt="${data.title}">
+                            <div class="card-content">
+                                <h3>${data.title}</h3>
+                                <p>${data.summary}</p>
+                            </div>
+                        </div>`;
+                }
+            }
+
+            if (contentHTML) {
+                container.innerHTML = contentHTML;
+                // Re-observar los nuevos elementos para la animación
+                container.querySelectorAll('.fade-in').forEach(el => appearOnScroll.observe(el));
+            }
+
+        } catch (error) {
+            console.error(error);
+            // Si falla la carga, el contenido estático del HTML permanece visible.
+        }
+    }
+
+    // Cargar contenido en las páginas correspondientes
+    if (document.getElementById('latest-news-container')) {
+        loadContent('noticias', 'latest-news-container', 3);
+    }
     if (document.getElementById('news-container')) {
-        cargarContenido('noticias');
+        loadContent('noticias', 'news-container');
     }
-    if (document.getElementById('project-container')) {
-        cargarContenido('proyectos');
+    if (document.getElementById('projects-container')) {
+        loadContent('proyectos', 'projects-container');
     }
 
-    // 6. Proteger el Área de Socio y Botón de Logout
-    if (window.location.pathname.includes('area-socio.html')) {
-        protegerAreaSocio();
+    // --- LÓGICA DE AUTENTICACIÓN (FIREBASE) ---
+
+    // Pestañas en la página "sumate.html"
+    window.openTab = (evt, tabName) => {
+        const tabcontent = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        const tablinks = document.getElementsByClassName("tab-link");
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
     }
-    const logoutButton = document.getElementById('logout-button');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            auth.signOut().then(() => {
-                window.location.href = 'index.html';
-            });
-        });
-    }
-});
 
-// --- DEFINICIÓN DE FUNCIONES ---
-
-function setupTabs() {
-    const loginFormElement = document.getElementById('login-form');
-    if (!loginFormElement) return;
-    const registerFormElement = document.getElementById('register-form');
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            const isLogin = button.textContent.includes('Iniciar Sesión');
-            loginFormElement.classList.toggle('active', isLogin);
-            registerFormElement.classList.toggle('active', !isLogin);
-        });
-    });
-}
-
-function setupAuthForms() {
-    const registerForm = document.getElementById('registerForm');
+    // Formulario de Registro
+    const registerForm = document.getElementById('register-form');
     if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-            const passwordConfirm = document.getElementById('register-password-confirm').value;
-            if (password !== passwordConfirm) {
-                alert('Las contraseñas no coinciden.');
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const errorEl = document.getElementById('register-error');
+            
+            if (password !== confirmPassword) {
+                errorEl.textContent = 'Las contraseñas no coinciden.';
                 return;
             }
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => db.collection('socios').doc(userCredential.user.uid).set({
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Guardar datos adicionales en Firestore
+                await db.collection('socios').doc(user.uid).set({
                     nombre: name,
                     email: email,
-                    estadoCuota: 'Pendiente',
-                    vencimiento: 'N/A'
-                }))
-                .then(() => {
-                    alert('¡Registro exitoso! Serás dirigido a tu panel.');
-                    window.location.href = 'area-socio.html';
-                })
-                .catch(error => alert('Error al registrar: ' + error.message));
+                    estado_cuota: 'Pendiente de aprobación'
+                });
+                
+                // Redirigir al área de socio
+                window.location.href = 'area-socio.html';
+
+            } catch (error) {
+                errorEl.textContent = error.message;
+            }
         });
     }
 
-    const loginForm = document.getElementById('loginForm');
+    // Formulario de Login
+    const loginForm = document.getElementById('login-form');
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    window.location.href = 'area-socio.html';
-                })
-                .catch(error => alert('Error al iniciar sesión: ' + error.message));
+            const errorEl = document.getElementById('login-error');
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                window.location.href = 'area-socio.html';
+            } catch (error) {
+                errorEl.textContent = 'Email o contraseña incorrectos.';
+            }
         });
     }
-}
 
-function protegerAreaSocio() {
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            const docRef = db.collection('socios').doc(user.uid);
-            docRef.get().then(doc => {
+    // Proteger el área de socio y mostrar datos
+    if (document.getElementById('member-area')) {
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // El usuario está logueado
+                const docRef = db.collection('socios').doc(user.uid);
+                const doc = await docRef.get();
+
                 if (doc.exists) {
                     const data = doc.data();
-                    const nombreSocioEl = document.getElementById('nombre-socio');
-                    const estadoCuotaEl = document.getElementById('estado-cuota');
-                    const vencimientoCuotaEl = document.getElementById('vencimiento-cuota');
-                    if(nombreSocioEl) nombreSocioEl.textContent = data.nombre;
-                    if(estadoCuotaEl) estadoCuotaEl.textContent = data.estadoCuota;
-                    if(vencimientoCuotaEl) vencimientoCuotaEl.textContent = data.vencimiento;
+                    document.getElementById('member-name').textContent = data.nombre;
+                    document.getElementById('member-email').textContent = data.email;
+                    const statusEl = document.getElementById('member-status');
+                    statusEl.textContent = data.estado_cuota;
+                    if (data.estado_cuota.toLowerCase().includes('al día')) {
+                        statusEl.className = 'status-ok';
+                    } else {
+                        statusEl.className = 'status-pending';
+                    }
+                } else {
+                    // No se encontraron datos del socio
+                    document.getElementById('member-name').textContent = 'Socio no encontrado';
                 }
-            });
-        } else {
-            window.location.href = 'sumate.html';
-        }
-    });
-}
-
-async function cargarContenido(tipo) {
-    const container = document.getElementById(tipo === 'noticias' ? 'news-container' : 'project-container');
-    if (!container) return;
-
-    const GITHUB_USER = 'BautistaBermay';
-    const GITHUB_REPO = 'Rotaract';
-    const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/_posts/${tipo}`;
-
-    try {
-        const response = await axios.get(API_URL);
-        const posts = response.data.filter(item => item.name.endsWith('.md'));
-
-        if (posts.length === 0) {
-            return; // No hacer nada, dejar el contenido de ejemplo
-        }
-
-        container.innerHTML = ''; // Limpiar contenido de ejemplo
-        posts.sort((a, b) => b.name.localeCompare(a.name));
-
-        const fetchPromises = posts.map(post => axios.get(post.download_url).then(res => parseFrontmatter(res.data)));
-        const allItems = await Promise.all(fetchPromises);
-        renderItems(allItems, tipo, container);
-        if (tipo === 'proyectos') {
-            renderProjectFilters(allItems);
-        }
-
-    } catch (error) {
-        console.error(`Error al cargar ${tipo}:`, error);
-        // No hacer nada si falla, el contenido de ejemplo se quedará visible
+            } else {
+                // El usuario no está logueado, redirigir
+                window.location.href = 'sumate.html';
+            }
+        });
     }
-}
 
-function renderItems(items, tipo, container) {
-    items.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.dataset.category = item.category?.toLowerCase() || '';
-        const title = item.title || 'Sin Título';
-        const image = item.image || 'https://placehold.co/600x400';
-        const summary = item.summary || '';
-        const date = new Date(item.date).toLocaleDateString('es-AR', { timeZone: 'UTC' });
-        const meta = tipo === 'noticias' ? `Publicado el ${date}` : `Categoría: ${item.category}`;
-        
-        card.innerHTML = `
-            <img src="${image}" alt="${title}">
-            <div class="card-content">
-                <h3>${title}</h3>
-                <p class="card-meta">${meta}</p>
-                <p>${summary}</p>
-                <a href="noticia-ejemplo.html">Leer más &rarr;</a> 
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
+    // Botón de Cerrar Sesión
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Error al cerrar sesión: ", error);
+            }
+        });
+    }
 
-function renderProjectFilters(projects) {
-    const filterContainer = document.getElementById('project-filters');
-    if (!filterContainer) return;
-    const categories = ['Todos', ...new Set(projects.map(p => p.category).filter(Boolean))];
-    
-    filterContainer.innerHTML = '';
-    categories.forEach(category => {
-        const button = document.createElement('button');
-        button.className = 'filter-btn';
-        button.textContent = category;
-        button.dataset.filter = category.toLowerCase();
-        if (category === 'Todos') button.classList.add('active');
+});
