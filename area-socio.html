@@ -1,38 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Área de Socio - Rotaract Club Bahía Blanca</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Socio - Rotaract Club</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        </header>
-    
+        <div class="container">
+            <a href="index.html" class="logo">Rotaract<span>.</span></a>
+            <div class="main-nav">
+                <nav>
+                    <a href="proyectos.html">PROYECTOS</a>
+                    <a href="noticias.html">NOTICIAS</a>
+                </nav>
+                <a href="#" id="logout-button" class="button button-primary">Cerrar Sesión</a>
+            </div>
+        </div>
+    </header>
     <main>
-        <section class="container page-header fade-in">
-            <h1>Portal de Socios</h1>
-            <p>Tu espacio personal dentro del club.</p>
-        </section>
-        
-        <section class="container fade-in">
-            <div class="member-area">
-                <h2>Bienvenido/a, <span id="member-name">...</span></h2>
-                <div class="member-info">
-                    <p><strong>Email:</strong> <span id="member-email">...</span></p>
-                    <p><strong>Estado de la cuota:</strong> <span id="member-status" class="status-ok">...</span></p>
+        <section class="section fade-in-section">
+            <div class="container">
+                <h2 class="section-title">Bienvenido, <span id="nombre-socio">Cargando...</span></h2>
+                <p class="section-subtitle">Aquí puedes gestionar tu membresía y ver el estado de tus cuotas.</p>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card status-card-ok">
+                        <h3>Estado de tu Cuota</h3>
+                        <div class="status-main">
+                            <span id="estado-cuota" class="status-text">Cargando...</span>
+                        </div>
+                        <div class="status-details">
+                            <p><strong>Próximo Vencimiento:</strong> <span id="vencimiento-cuota">Cargando...</span></p>
+                        </div>
+                    </div>
                 </div>
-                <p>Aquí encontrarás información exclusiva para socios, actas de reuniones y el calendario de eventos internos.</p>
-                <button id="logout-button" class="btn btn-primary">Cerrar Sesión</button>
             </div>
         </section>
     </main>
-    
     <footer>
-        </footer>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <div class="container">
+            <div class="footer-logo">Rotaract<span>.</span></div>
+            <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
+        </div>
+    </footer>
     
-    <script src="scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
+            authDomain: "rotaract-bahia-blanca.firebaseapp.com",
+            projectId: "rotaract-bahia-blanca",
+            storageBucket: "rotaract-bahia-blanca.appspot.com",
+            messagingSenderId: "341656264257",
+            appId: "1:341656264257:web:b4f344b6024b84341730c0",
+            measurementId: "G-VXKKFV30H8"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="scripts.js" defer></script>
 </body>
 </html>

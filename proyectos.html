@@ -5,57 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyectos - Rotaract Club Bahía Blanca</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        </header>
-
-    <main>
-        <section class="container page-header fade-in">
-            <h1>Nuestros Proyectos</h1>
-            <p>Descubre cómo llevamos nuestras ideas a la acción para generar un cambio real.</p>
-        </section>
-
-        <section class="container fade-in">
-            <div class="filter-buttons">
-                <button class="btn btn-filter active" data-filter="todos">Todos</button>
-                <button class="btn btn-filter" data-filter="comunidad">Comunidad</button>
-                <button class="btn btn-filter" data-filter="medio-ambiente">Medio Ambiente</button>
-                <button class="btn btn-filter" data-filter="salud">Salud</button>
+        <div class="container">
+            <a href="index.html" class="logo">Rotaract<span>.</span></a>
+            <div class="main-nav">
+                <nav>
+                    <a href="index.html">INICIO</a>
+                    <a href="quienes-somos.html">QUIÉNES SOMOS</a>
+                    <a href="proyectos.html" class="active">PROYECTOS</a>
+                    <a href="noticias.html">NOTICIAS</a>
+                    <a href="contacto.html">CONTACTO</a>
+                </nav>
+                <a href="sumate.html" class="button button-primary">SUMATE</a>
             </div>
-
-            <div class="projects-grid" id="projects-container">
-                <div class="card project-card" data-category="medio-ambiente">
-                    <div class="card-category">Medio Ambiente</div>
-                    <img src="assets/images/proyecto-reforestacion.jpg" alt="Reforestación">
-                    <div class="card-content">
-                        <h3>Reforestación del Parque de Mayo</h3>
-                        <p>Plantamos especies nativas para recuperar el ecosistema del principal pulmón verde de la ciudad.</p>
-                    </div>
+        </div>
+    </header>
+    <main>
+        <section class="section fade-in-section">
+            <div class="container">
+                <h2 class="section-title">Nuestros Proyectos</h2>
+                <p class="section-subtitle">Acciones que transforman. Conoce las iniciativas que hemos llevado a cabo para mejorar nuestra comunidad.</p>
+                <div id="project-filters" class="filter-buttons">
+                    <button class="filter-btn active" data-filter="todos">Todos</button>
                 </div>
-                 <div class="card project-card" data-category="comunidad">
-                    <div class="card-category">Comunidad</div>
-                    <img src="assets/images/proyecto-comedor.jpg" alt="Comedor">
-                    <div class="card-content">
-                        <h3>Apoyo a Comedores Infantiles</h3>
-                        <p>Realizamos colectas mensuales de alimentos no perecederos para colaborar con tres comedores locales.</p>
-                    </div>
-                </div>
-                 <div class="card project-card" data-category="salud">
-                    <div class="card-category">Salud</div>
-                    <img src="assets/images/proyecto-donacion.jpg" alt="Donación de sangre">
-                    <div class="card-content">
-                        <h3>Campaña de Donación de Sangre</h3>
-                        <p>Organizamos jornadas de donación en conjunto con el hospital local para aumentar las reservas de sangre.</p>
-                    </div>
+                 <div id="project-container" class="card-grid">
+                    <article class="card" data-category="medio-ambiente">
+                        <img src="https://images.unsplash.com/photo-1611270418597-a6c7365b6b35?q=80&w=2070&auto=format&fit=crop" alt="Proyecto de Reforestación">
+                        <div class="card-content">
+                            <h3>Reforestación del Parque</h3>
+                            <p class="card-meta">Categoría: Medio Ambiente</p>
+                            <p>Junto a voluntarios, plantamos más de 100 árboles nativos en el Parque de la Ciudad.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="comunidad">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop" alt="Colecta de Alimentos">
+                        <div class="card-content">
+                            <h3>Colecta Anual de Alimentos</h3>
+                            <p class="card-meta">Categoría: Comunidad</p>
+                            <p>Recolectamos más de 500kg de alimentos no perecederos para comedores locales.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="card" data-category="salud">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" alt="Jornada de Salud">
+                        <div class="card-content">
+                            <h3>Jornada de Prevención y Salud</h3>
+                            <p class="card-meta">Categoría: Salud</p>
+                            <p>Realizamos controles de presión y glucosa gratuitos en la plaza principal del barrio.</p>
+                            <a href="#">Ver Detalles &rarr;</a>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
     </main>
-    
     <footer>
-        </footer>
-    <script src="scripts.js"></script>
+        <div class="container">
+            <div class="footer-logo">Rotaract<span>.</span></div>
+            <p>&copy; 2025 Rotaract Club Bahía Blanca. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-PUWeewc2GDLkIbkJFtTHI7qj1YnKt6g",
+            authDomain: "rotaract-bahia-blanca.firebaseapp.com",
+            projectId: "rotaract-bahia-blanca",
+            storageBucket: "rotaract-bahia-blanca.appspot.com",
+            messagingSenderId: "341656264257",
+            appId: "1:341656264257:web:b4f344b6024b84341730c0",
+            measurementId: "G-VXKKFV30H8"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="scripts.js" defer></script>
 </body>
 </html>
